@@ -1,4 +1,4 @@
-import Stomp from '@stomp/stompjs';
+import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 
 import './App.css';
