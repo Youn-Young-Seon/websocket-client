@@ -1,4 +1,4 @@
-import Stomp from 'stompjs';
+import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
 import './App.css';
@@ -11,29 +11,37 @@ function App() {
   const [kakaoPrice, kakaoPriceSet] = useState(0);
 
   useEffect(() => {
-    const socket = new SockJS('/gs-guid-websocket');
-    const stompClient = Stomp.over(socket);
-
-    stompClient.connect({}, () => {
-      console.log("connected");
-
-      stompClient.subscribe('/topic/trade', (message) => {
-        console.log(message);
-      });
+    const socket = new SockJS('http://localhost:8081/gs-guide-websocket');
+    const client = new Client({
+      webSocketFactory: () => socket,
+      onConnect: () => {
+        // setConnected(true);
+        console.log('Connected');
+        
+        client.subscribe('/topic/trade', (message) => {
+          console.log(message);
+          // showGreeting(JSON.parse(message.body).content);
+        });
+      },
+      onDisconnect: () => {
+        // setConnected(false);
+        console.log('Disconnected');
+      },
     });
 
-    return () => {
-      if(stompClient !== null) {
-        stompClient.disconnect();
-      }
-    };
+    client.activate();
+    // setStompClient(client);
   }, []);
 
   const sendData = () => {
-    if(stompClient) {
-      stompClient.send('/app/trade', {}, JSON.stringify(""));
-    }
+    // if (stompClient && connected) {
+      client.publish({
+        destination: '/app/trade',
+        body: JSON.stringify({ name: "dd" }),
+      });
+    // }
   };
+  
 
   return (
     <div>
