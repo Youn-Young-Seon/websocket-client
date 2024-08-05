@@ -4,12 +4,12 @@ import './App.css';
 import { useEffect, useState } from 'react';
 
 function App() {
-  const [samsungPrice, samsungPriceSet] = useState(0);
-  const [LGPrice, LGPriceSet] = useState(0);
-  const [naverPrice, naverPriceSet] = useState(0);
-  const [kakaoPrice, kakaoPriceSet] = useState(0);
+  const [samsungPrice, setSamsungPrice] = useState(0);
+  const [LGPrice, setLGPrice] = useState(0);
+  const [naverPrice, setnaverPrice] = useState(0);
+  const [kakaoPrice, setkakaoPrice] = useState(0);
 
-  const [connected, setConnected] = useState(false);
+  const [, setConnected] = useState(false);
   const [stompClient, setStompClient] = useState(null);
 
   useEffect(() => {
@@ -17,10 +17,11 @@ function App() {
     const client = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
+        console.log('Connected');
         setConnected(true);
         
         client.subscribe('/topic/trade', (message) => {
-          console.log(message);
+          console.log(message.body);
           // showGreeting(JSON.parse(message.body).content);
         });
       },
@@ -35,21 +36,27 @@ function App() {
   }, []);
 
   const sendData = () => {
-    if (stompClient && connected) {
-      stompClient.publish({
-        destination: '/app/trade',
-        body: JSON.stringify({ name: "dd" }),
-      });
-    }
+    stompClient.publish({
+      destination: '/app/trade',
+      body: JSON.stringify({
+        tradeType: "BUY", 
+        stocks: [ { name: "Samsung", price: 80000 } ],
+        customer: "test"
+      }),
+    });
   };
-  
 
   return (
     <div>
-      <div>Samsung: </div>
-      <div>LG: </div>
-      <div>Naver: </div>
-      <div>Kakao: </div>
+      <div>
+        <p>
+          Samsung: {samsungPrice}
+          <button onClick={sendData}>넣기</button>
+        </p>
+      </div>
+      <div>LG: {LGPrice}</div>
+      <div>Naver: {naverPrice}</div>
+      <div>Kakao: {kakaoPrice}</div>
     </div>
   );
 }
