@@ -5,9 +5,6 @@ import { useEffect, useState } from 'react';
 
 function App() {
   const [samsungPrice, setSamsungPrice] = useState(0);
-  const [LGPrice, setLGPrice] = useState(0);
-  const [naverPrice, setnaverPrice] = useState(0);
-  const [kakaoPrice, setkakaoPrice] = useState(0);
 
   const [, setConnected] = useState(false);
   const [stompClient, setStompClient] = useState(null);
@@ -40,24 +37,32 @@ function App() {
       destination: '/app/trade',
       body: JSON.stringify({
         tradeType: "BUY", 
-        stocks: [ { name: "Samsung", price: 80000 } ],
+        stocks: [ { stockType: "SAMSUNG", name: "Samsung", price: 80000 } ],
         customer: "test"
       }),
     });
   };
 
   return (
-    <div>
       <div>
-        <p>
-          Samsung: {samsungPrice}
-          <button onClick={sendData}>넣기</button>
-        </p>
+        <div>
+          <p> [Samsung] price: {samsungPrice}</p>
+        </div>
+        <div>
+          <p>
+            <input type="hidden" name="buy"/>
+            <input type="number" name="price"/>
+            <input type="number" name="count"/>
+            <button onClick={sendData}>매수</button>
+          </p>
+          <p>
+            <input type="hidden" name="sell"/>
+            <input type="number" name="price"/>
+            <input type="number" name="count"/>
+            <button onClick={sendData}>매도</button>
+          </p>
+        </div>
       </div>
-      <div>LG: {LGPrice}</div>
-      <div>Naver: {naverPrice}</div>
-      <div>Kakao: {kakaoPrice}</div>
-    </div>
   );
 }
 
