@@ -2,10 +2,9 @@ import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import './App.css';
 import { useEffect, useState } from 'react';
+import BoxList from "./components/BoxList";
 
 function App() {
-  const [samsungPrice, setSamsungPrice] = useState(0);
-
   const [, setConnected] = useState(false);
   const [stompClient, setStompClient] = useState(null);
 
@@ -17,9 +16,8 @@ function App() {
         console.log('Connected');
         setConnected(true);
         
-        client.subscribe('/topic/trade', (message) => {
+        client.subscribe('/box/fill', (message) => {
           console.log(message.body);
-          // showGreeting(JSON.parse(message.body).content);
         });
       },
       onDisconnect: () => {
@@ -34,33 +32,46 @@ function App() {
 
   const sendData = () => {
     stompClient.publish({
-      destination: '/app/trade',
+      destination: '/app/fill',
       body: JSON.stringify({
-        tradeType: "BUY", 
-        stocks: [ { stockType: "SAMSUNG", name: "Samsung", price: 80000 } ],
-        customer: "test"
+          boxTaskType: "PROGRESS",
+          boxes: [
+              { fill: false },
+              { fill: false },
+              { fill: false },
+              { fill: false },
+              { fill: false },
+              { fill: false },
+              { fill: false },
+              { fill: false },
+              { fill: false },
+              { fill: false }
+          ]
       }),
     });
   };
 
   return (
       <div>
-        <div>
-          <p> [Samsung] price: {samsungPrice}</p>
+        <div style={{display: "flex"}}>
+          <BoxList/>
+          <button type="button" onClick={sendData}>exec</button>
         </div>
-        <div>
-          <p>
-            <input type="hidden" name="buy"/>
-            <input type="number" name="price"/>
-            <input type="number" name="count"/>
-            <button onClick={sendData}>매수</button>
-          </p>
-          <p>
-            <input type="hidden" name="sell"/>
-            <input type="number" name="price"/>
-            <input type="number" name="count"/>
-            <button onClick={sendData}>매도</button>
-          </p>
+        <div style={{display: "flex"}}>
+          <BoxList/>
+          <button type="button">exec</button>
+        </div>
+        <div style={{display: "flex"}}>
+          <BoxList/>
+          <button type="button">exec</button>
+        </div>
+        <div style={{display: "flex"}}>
+          <BoxList/>
+          <button type="button">exec</button>
+        </div>
+        <div style={{display: "flex"}}>
+          <BoxList/>
+          <button type="button">exec</button>
         </div>
       </div>
   );
