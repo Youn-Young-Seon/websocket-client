@@ -30,10 +30,11 @@ function App() {
     setStompClient(client);
   }, []);
 
-  const sendData = () => {
+  const sendData = (idx) => {
     stompClient.publish({
       destination: '/app/fill',
       body: JSON.stringify({
+          idx,
           boxTaskType: "PROGRESS",
           boxes: [
               { fill: false },
@@ -53,26 +54,46 @@ function App() {
 
   return (
       <div>
-        <div style={{display: "flex"}}>
-          <BoxList/>
-          <button type="button" onClick={sendData}>exec</button>
-        </div>
-        <div style={{display: "flex"}}>
-          <BoxList/>
-          <button type="button">exec</button>
-        </div>
-        <div style={{display: "flex"}}>
-          <BoxList/>
-          <button type="button">exec</button>
-        </div>
-        <div style={{display: "flex"}}>
-          <BoxList/>
-          <button type="button">exec</button>
-        </div>
-        <div style={{display: "flex"}}>
-          <BoxList/>
-          <button type="button">exec</button>
-        </div>
+          <div style={{display: "flex"}}>
+              <BoxList/>
+              <button type="button" onClick={() => sendData(1)}>exec</button>
+          </div>
+          <div style={{display: "flex"}}>
+              <BoxList/>
+              <button type="button" onClick={() => sendData(2)}>exec</button>
+          </div>
+          <div style={{display: "flex"}}>
+              <BoxList/>
+              <button type="button" onClick={() => sendData(3)}>exec</button>
+          </div>
+          <div style={{display: "flex"}}>
+              <BoxList/>
+              <button type="button" onClick={() => sendData(4)}>exec</button>
+          </div>
+          <div style={{display: "flex"}}>
+              <BoxList/>
+              <button type="button" onClick={() => sendData(5)}>exec</button>
+          </div>
+          <div style={{display: "flex"}}>
+              <BoxList/>
+              <button type="button" onClick={() => sendData(6)}>exec</button>
+          </div>
+          <div style={{display: "flex"}}>
+              <BoxList/>
+              <button type="button" onClick={() => sendData(7)}>exec</button>
+          </div>
+          <div style={{display: "flex"}}>
+              <BoxList/>
+              <button type="button" onClick={() => sendData(8)}>exec</button>
+          </div>
+          <div style={{display: "flex"}}>
+              <BoxList/>
+              <button type="button" onClick={() => sendData(9)}>exec</button>
+          </div>
+          <div style={{display: "flex"}}>
+              <BoxList/>
+              <button type="button" onClick={() => sendData(10)}>exec</button>
+          </div>
       </div>
   );
 }
