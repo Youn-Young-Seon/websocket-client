@@ -2,11 +2,15 @@ import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import './App.css';
 import { useEffect, useState } from 'react';
-import BoxList from "./components/BoxList";
+import BoxPage from './BoxPage';
 
 function App() {
   const [, setConnected] = useState(false);
   const [stompClient, setStompClient] = useState(null);
+  const [data, setData] = useState({});
+  
+  const range = (start, end) => Array.from({ length: end - start }, (v, k) => k + start);
+  const intStream = range(1, 11);
 
   useEffect(() => {
     const socket = new SockJS('http://localhost:8081/gs-guide-websocket');
@@ -17,7 +21,9 @@ function App() {
         setConnected(true);
         
         client.subscribe('/box/fill', (message) => {
-          console.log(message.body);
+          let parseBody = JSON.parse(message.body);
+          console.log(parseBody);
+          setData(parseBody);
         });
       },
       onDisconnect: () => {
@@ -30,70 +36,15 @@ function App() {
     setStompClient(client);
   }, []);
 
-  const sendData = (idx) => {
-    stompClient.publish({
-      destination: '/app/fill',
-      body: JSON.stringify({
-          idx,
-          boxTaskType: "PROGRESS",
-          boxes: [
-              { fill: false },
-              { fill: false },
-              { fill: false },
-              { fill: false },
-              { fill: false },
-              { fill: false },
-              { fill: false },
-              { fill: false },
-              { fill: false },
-              { fill: false }
-          ]
-      }),
-    });
-  };
-
   return (
       <div>
-          <div style={{display: "flex"}}>
-              <BoxList/>
-              <button type="button" onClick={() => sendData(1)}>exec</button>
-          </div>
-          <div style={{display: "flex"}}>
-              <BoxList/>
-              <button type="button" onClick={() => sendData(2)}>exec</button>
-          </div>
-          <div style={{display: "flex"}}>
-              <BoxList/>
-              <button type="button" onClick={() => sendData(3)}>exec</button>
-          </div>
-          <div style={{display: "flex"}}>
-              <BoxList/>
-              <button type="button" onClick={() => sendData(4)}>exec</button>
-          </div>
-          <div style={{display: "flex"}}>
-              <BoxList/>
-              <button type="button" onClick={() => sendData(5)}>exec</button>
-          </div>
-          <div style={{display: "flex"}}>
-              <BoxList/>
-              <button type="button" onClick={() => sendData(6)}>exec</button>
-          </div>
-          <div style={{display: "flex"}}>
-              <BoxList/>
-              <button type="button" onClick={() => sendData(7)}>exec</button>
-          </div>
-          <div style={{display: "flex"}}>
-              <BoxList/>
-              <button type="button" onClick={() => sendData(8)}>exec</button>
-          </div>
-          <div style={{display: "flex"}}>
-              <BoxList/>
-              <button type="button" onClick={() => sendData(9)}>exec</button>
-          </div>
-          <div style={{display: "flex"}}>
-              <BoxList/>
-              <button type="button" onClick={() => sendData(10)}>exec</button>
-          </div>
+        {
+          intStream.map(i => <BoxPage key={i} 
+            idx={i} 
+            data={data} 
+            stompClient={stompClient}
+          />)
+        }
       </div>
   );
 }
