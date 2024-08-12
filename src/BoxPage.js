@@ -32,7 +32,7 @@ function BoxPage({ idx, data, stompClient }) {
 
     return (
         <div style={{display: "flex"}}>
-            <BoxList data={data} />
+            <BoxList idx={idx} data={data} />
             {
                  (taskType === "PROGRESS") ?
                     <span>PROGRESS</span> : 

@@ -1,10 +1,27 @@
-// import {useState} from "react";
+import {useEffect, useState} from "react";
 
-function Box() {
-    // const [fill, setFill] = useState(false);
+function Box({ idx, boxIdx, data }) {
+    const [fill, setFill] = useState(false);
+
+    const blankBox = { width: '25px', height: '25px', border: '1px solid black' }
+    const filledBox = { width: '25px', height: '25px', border: '1px solid black', backgroundColor: 'gray' }
+
+    useEffect(() => {
+        if (idx === data.idx) {
+            let box = data.boxes[boxIdx - 1];
+            if (box.fill) setFill(true);
+            else setFill(false);
+        }
+    }, [boxIdx, data, idx]);
 
     return (
-        <div style={{ width: '25px', height: '25px', border: '1px solid black' }}></div>
+        <>
+        {
+            fill ? 
+                <div style={ filledBox }></div> : 
+                <div style={ blankBox }></div>
+        }
+        </>
     )
 }
 
